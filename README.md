@@ -1,4 +1,4 @@
-presentations-golang
+An Introduction to Go
 ====================
 
-An introduction to Go
+####Open slides/index.html to view the slides
