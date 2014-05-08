@@ -59,6 +59,7 @@
                     </li>
                     <li>Built-in testing</li>
                     <li>Built-in package management</li>
+                    <li>Compiles to native code</li>
                 </ul>
             </section>
 
@@ -74,56 +75,31 @@
             </section>
 
             <section>
-                <h2>Syntax</h2>
-                <div style="float: left; width: 50%">
-                    <h3>C#</h3>
-                    <pre><code data-trim contenteditable class="cs">int i;
-bool a, b, c;
-
-int x = 1;
-var y = 2;                        
-                        </code></pre>
-                </div>
-                <div style="float: right; width: 50%">
-                    <h3>Go</h3>
-                    <pre><code data-trim contenteditable  class="go">var i int
+                <h2>Variables</h2>
+                <pre><code data-trim contenteditable  class="go">var i int
 var a, b, c bool
 
 var x, y int = 1, 2
 var x, y = 1, 2
 var different, types = true, "Works"
 
+// within a function
 foo := "something"
 foo, bar := true, 1.0
                         </code></pre>
-                </div>
             </section>
             <section>
                 <section>
                     <h2>Collections</h2>
-                    <div style="float: left; width: 50%">
-                        <h3>C#</h3>
-                        <pre><code data-trim contenteditable class="cs">
-int[] foo = new int[5];
-foo[0] = 1;
-
-var foo = new[] { 1, 2, 3, 4, 5 };
-
-
-var foo = new List&lt;int&gt;{ 1, 2,3, 4, 5 };
-foo.Add(6);
-var bar = foo.ToList();
-                        </code></pre>
-                    </div>
-                    <div class="fragment" style="float: right; width: 50%">
-                        <h3>Go</h3>
-                        <pre><code data-trim contenteditable class="go">
+                    <pre><code data-trim contenteditable class="go">
+// Arrays
 var foo [5]int
 foo[0] = 1
 
 foo := [5]int{ 1, 2, 3, 4, 5 }
 foo := [...]int{ 1, 2, 3, 4, 5 }
 
+// Slices
 foo := []int{ 1, 2, 3, 4, 5 }
 foo = append(foo, 6)
 bar := make([]int, len(foo))
@@ -132,28 +108,292 @@ copy(bar, foo)
 noCopy := foo[2:5] // [3 4 5]
 noCopy := foo[2:] // [3 4 5 6]
                         </code></pre>
-                    </div>
                 </section>
                 <section>
                     <h2>More Collections</h2>
-                    
-                        <pre><code data-trim contenteditable class="go">
+                    <pre><code data-trim contenteditable class="go">
+// Maps
 var m map[int]string
 m = make(map[int]string)
 m[1] = "Foo"
 
 // map literal
-var m = map[int]string{
+m := map[int]string{
     1: "Foo",
     2: "Bar"
 }
+
+storedValue := m[1]
+value, exists := m[2]
 delete(m, 2)
                         </code></pre>
                 </section>
             </section>
 
             <section>
-                <h2>Functions</h2>
+                <h2>Conditions</h2>
+                <pre><code data-trim contenteditable class="go">
+// No parens, braces are required
+if i == 42 {
+    // Do something
+} else {
+    // Do something else
+}
+
+if x := rand.Intn(2); x % 2 == 0 {
+    // x can be used here
+} else {
+    // and here
+}
+                    </code></pre>
+            </section>
+
+            <section>
+                <section>
+                    <h2>Loops</h2>
+                    <pre><code data-trim contenteditable class="go">
+// No parens
+for i := 0; i &lt; 10; i++ {
+    // Do something...
+}
+
+// while
+for pigs != "flying" {
+    fmt.Println("We're still ok!")
+}
+
+for {
+    // loop forever
+}
+                    </code></pre>
+                </section>
+                <section>
+                    <h2>Loops and Collections</h2>
+                    <pre><code data-trim contenteditable class="go">
+fib := []int{ 1, 1, 2, 3, 5, 8, 11 }
+for i, v := range fib {
+    fmt.Printf("Value at %d is %d", i, v) // e.g. "Value at 0 is 1"
+}
+
+features := map[string]bool{"Loops": true, "Generics": false}
+for key, value := range features {
+    fmt.Printf("Go has %s? %v\n", key, value)
+}
+// Go has Loops? true
+// Go has Generics? false
+                    </code></pre>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h2>Functions</h2>
+                    <pre><code data-trim contenteditable class="go">
+func add(x, y int) int {
+    return x + y
+}
+
+func multipleResults() (int, string) {
+    return 1, "Foo"
+}
+
+func divmod(x, y int) (div, mod int) {
+    div, mod = x / y, x % y
+    return
+}
+                    </code></pre>
+                </section>
+                <section>
+                    <h2>Errors</h2>
+                    <pre><code data-trim contenteditable class="go">
+type MyError struct { 
+    ErrorString string
+}
+
+func (e *MyError) Error() string {
+    return e.ErrorString
+}
+
+func couldFail() (string, error) {
+    if x := rand.Intn(2); x % 2 == 0 {
+        return "It worked!", nil;
+    } 
+    return nil, &amp;MyError{"It failed!"}
+}
+                    </code></pre>
+                </section>
+                <section>
+                    <h2>Nested Functions</h2>
+                    <pre><code data-trim contenteditable class="go">
+func main() {
+    prettyPrint := func(s string) {
+        fmt.Println(strings.Title(s))
+    }
+
+    prettyPrint("hello world")
+}
+                    </code></pre>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h2>Structs</h2>
+                    <pre><code data-trim contenteditable class="go">
+type Point struct {
+    X int
+    Y int
+}
+
+func main() {
+    p := Point{5, 3}
+    p1 := &amp;p
+    p1.X = 10
+    fmt.Println(p)  // {10, 3}
+
+    p := Point{Y: 2}
+    fmt.Println(p)  // {0, 2}
+}
+                    </code></pre>
+                </section>
+                <section>
+                    <h2>Pointers</h2>
+                    <pre><code data-trim contenteditable class="go">
+type Point struct {
+    X int
+    Y int
+}
+
+func main() {
+    // These three lines are equivalent
+    var p *Point = new(Point)
+    p := new(Point)
+    p := &amp;Point{}
+}
+                    </code></pre>
+                </section>
+            </section>
+
+            <section>
+                <h2>Interfaces</h2>
+                <pre><code data-trim contenteditable class="go">
+// This one's built-in
+type error interface { 
+    Error() string
+}
+
+type AnErrorWithCode int
+
+// Notice it's not a pointer this time
+func (e AnErrorWithCode) Error() string {
+    return fmt.Sprintf("Something failed, error code %d", int(e))
+}
+                </code></pre>
+            </section>
+
+            <section>
+                <section>
+                    <h2>Defer</h2>
+                    <pre><code data-trim contenteditable class="go">
+func LoadConfig(filename string) error {
+    file, err := os.Open(filename)
+    if err != nil {
+        return err
+    }
+    defer file.Close()
+
+    // Process file...
+}
+                    </code></pre>
+                </section>
+                <section>
+                    <h2>Error Recovery</h2>
+                    <pre><code data-trim contenteditable class="go">
+func main() {
+    defer func() {
+        if err := recover(); err != nil {
+            fmt.Println("Recovering from error:", err)
+        }
+    }()
+
+    panic("SOMETHING BAD HAPPENED")
+}
+                    </code></pre>
+                </section>
+            </section>
+
+            <section>
+                <h2>Goroutines</h2>
+                <pre><code data-trim contenteditable class="go">
+func main() {
+    go jumpInALake(c)
+    fmt.Println("I don't like you")
+}
+
+func jumpInALake(c chan bool) {
+    // Need some time to think of a witty response
+    time.Sleep(100 * time.Millisecond)
+    fmt.Println("But I don't have my swimsuit")
+}
+                    </code></pre>
+                <p>What does this print?</p>
+                <small class="fragment">I don't like you</small>
+            </section>
+            <section>
+                <h2>Channels</h2>
+                <pre><code data-trim contenteditable class="go">
+func main() {
+    c := make(chan bool)
+    go jumpInALake(c)
+    fmt.Println("I don't like you")
+    &lt;-c // Waits for a value from the channel
+}
+
+func jumpInALake(c chan bool) {
+    time.Sleep(100 * time.Millisecond)
+    fmt.Println("But I don't have my swimsuit")
+    c &lt;- true // Pushes a value onto the channel
+}
+                    </code></pre>
+                <small>I don't like you</small>
+                <br />
+                <small>But I don't have my swimsuit</small>
+            </section>
+            <section>
+                <h2>Concurrency</h2>
+                <pre><code data-trim contenteditable class="go">
+func main() {
+    c := make(chan bool)
+    go jumpInALake(c)
+    fmt.Println("I don't like you")
+    &lt;-c
+}
+
+func jumpInALake(c chan bool) {
+    // Need some time to think of a witty response
+    time.Sleep(100 * time.Millisecond)
+    fmt.Println("But I don't have my swimsuit")
+    c &lt;- true
+}
+                    </code></pre>
+            </section>
+
+            <section>
+                <h2>Web Frameworks</h2>
+                <ul>
+                    <li>
+                        <a href="http://martini.codegangsta.io/">Martini</a>
+                    </li>
+                    <li>
+                        <a href="http://revel.github.io/">Revel</a>
+                    </li>
+                    <li>
+                        <a href="http://fitstar.github.io/falcore/">Falcore</a>
+                    </li>
+                    <li>
+                        <a href="http://beego.me/">Beego</a>
+                    </li>
+                </ul>
             </section>
 
             <section>
@@ -166,7 +406,10 @@ delete(m, 2)
                         <a href="http://tour.golang.org/">Take a tour of Go</a>
                     </li>
                     <li>
-                        <a href="http://www.golang-book.com/">Free Go Book</a>
+                        <a href="http://www.golang-book.com/">Free Go book</a>
+                    </li>
+                    <li>
+                        <a href="https://www.youtube.com/watch?v=f6kdp27TYZs">Go Concurrency Patterns (video)</a>
                     </li>
                     <li>
                         <a href="https://groups.google.com/forum/#!forum/golang-nuts">Go Nuts mailing list</a>
