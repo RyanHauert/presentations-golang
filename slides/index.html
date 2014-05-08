@@ -351,11 +351,11 @@ func main() {
                 <h2>Goroutines</h2>
                 <pre><code data-trim contenteditable class="go">
 func main() {
-    go jumpInALake(c)
+    go jumpInALake()
     fmt.Println("I don't like you")
 }
 
-func jumpInALake(c chan bool) {
+func jumpInALake() {
     // Need some time to think of a witty response
     time.Sleep(100 * time.Millisecond)
     fmt.Println("But I don't have my swimsuit")
@@ -387,6 +387,7 @@ func jumpInALake(c chan bool) {
 
             <section>
                 <h2>Web Frameworks</h2>
+                <h4>Coming in a future presentation</h4>
                 <ul>
                     <li>
                         <a href="http://martini.codegangsta.io/">Martini</a>
