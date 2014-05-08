@@ -68,7 +68,7 @@
                 <ul>
                     <li>Started at Google in 2007</li>
                     <li>Open sourced Nov 2009</li>
-                    <li>1.0 March 28, 2012</li>
+                    <li>1.0 on March 28, 2012</li>
                     <li>Currently at version 1.2.2</li>
                     <li>1.3 beta released April 21, 2014</li>
                 </ul>
@@ -76,22 +76,22 @@
 
             <section>
                 <h2>Variables</h2>
-                <pre><code data-trim contenteditable  class="go">var i int
-var a, b, c bool
-
-var x, y int = 1, 2
-var x, y = 1, 2
-var different, types = true, "Works"
-
-// within a function
-foo := "something"
-foo, bar := true, 1.0
-                        </code></pre>
+                <pre><code data-trim contenteditable  class="go">
+var i int                               // Go's basic types:
+var a, b, c bool                        // bool
+                                        // string
+var x, y int = 1, 2                     // int  int8  int16  int32  int64
+var x, y = 1, 2                         // uint uint8 uint16 uint32 uint64
+var different, types = true, "Works"    // uintptr
+                                        // byte // alias for uint8
+// within a Function                    // rune // Unicode, alias for int32
+foo := "something"                      // float32 float64
+foo, bar := true, 1.0                   // complex64 complex128
+                </code></pre>
             </section>
             <section>
-                <section>
-                    <h2>Collections</h2>
-                    <pre><code data-trim contenteditable class="go">
+                <h2>Collections</h2>
+                <pre><code data-trim contenteditable class="go">
 // Arrays
 var foo [5]int
 foo[0] = 1
@@ -107,11 +107,11 @@ copy(bar, foo)
 
 noCopy := foo[2:5] // [3 4 5]
 noCopy := foo[2:] // [3 4 5 6]
-                        </code></pre>
-                </section>
-                <section>
-                    <h2>More Collections</h2>
-                    <pre><code data-trim contenteditable class="go">
+                </code></pre>
+            </section>
+            <section>
+                <h2>More Collections</h2>
+                <pre><code data-trim contenteditable class="go">
 // Maps
 var m map[int]string
 m = make(map[int]string)
@@ -126,8 +126,7 @@ m := map[int]string{
 storedValue := m[1]
 value, exists := m[2]
 delete(m, 2)
-                        </code></pre>
-                </section>
+                </code></pre>
             </section>
 
             <section>
@@ -145,13 +144,12 @@ if x := rand.Intn(2); x % 2 == 0 {
 } else {
     // and here
 }
-                    </code></pre>
+                </code></pre>
             </section>
 
             <section>
-                <section>
-                    <h2>Loops</h2>
-                    <pre><code data-trim contenteditable class="go">
+                <h2>Loops</h2>
+                <pre><code data-trim contenteditable class="go">
 // No parens
 for i := 0; i &lt; 10; i++ {
     // Do something...
@@ -165,12 +163,16 @@ for pigs != "flying" {
 for {
     // loop forever
 }
-                    </code></pre>
-                </section>
-                <section>
-                    <h2>Loops and Collections</h2>
-                    <pre><code data-trim contenteditable class="go">
+                </code></pre>
+            </section>
+            <section>
+                <h2>Loops and Collections</h2>
+                <pre><code data-trim contenteditable class="go">
 fib := []int{ 1, 1, 2, 3, 5, 8, 11 }
+for i := 0; i &lt; len(fib); i++ {
+    val := fib[i]
+}
+
 for i, v := range fib {
     fmt.Printf("Value at %d is %d", i, v) // e.g. "Value at 0 is 1"
 }
@@ -181,14 +183,12 @@ for key, value := range features {
 }
 // Go has Loops? true
 // Go has Generics? false
-                    </code></pre>
-                </section>
+                </code></pre>
             </section>
 
             <section>
-                <section>
-                    <h2>Functions</h2>
-                    <pre><code data-trim contenteditable class="go">
+                <h2>Functions</h2>
+                <pre><code data-trim contenteditable class="go">
 func add(x, y int) int {
     return x + y
 }
@@ -197,49 +197,55 @@ func multipleResults() (int, string) {
     return 1, "Foo"
 }
 
-func divmod(x, y int) (div, mod int) {
-    div, mod = x / y, x % y
+// Capitalized constructs are exported (visible outside the package) 
+func Divmod(x, y int) (div, mod int) {
+    div, mod = x/y, x%y
     return
 }
-                    </code></pre>
-                </section>
-                <section>
-                    <h2>Errors</h2>
-                    <pre><code data-trim contenteditable class="go">
-type MyError struct { 
-    ErrorString string
+                </code></pre>
+            </section>
+            <section>
+                <h2>Nested Functions and Closures</h2>
+                <!-- <pre><code data-trim contenteditable class="go">
+func intSeq() func() int {
+    i := 0
+    return func() int {
+        i++
+        return i
+    }
 }
 
-func (e *MyError) Error() string {
-    return e.ErrorString
-}
-
-func couldFail() (string, error) {
-    if x := rand.Intn(2); x % 2 == 0 {
-        return "It worked!", nil;
-    } 
-    return nil, &amp;MyError{"It failed!"}
-}
-                    </code></pre>
-                </section>
-                <section>
-                    <h2>Nested Functions</h2>
-                    <pre><code data-trim contenteditable class="go">
 func main() {
-    prettyPrint := func(s string) {
-        fmt.Println(strings.Title(s))
+    nextInt := intSeq()
+    fmt.Println(nextInt()) // 1
+    fmt.Println(nextInt()) // 2
+    fmt.Println(nextInt()) // 3
+}
+                </code></pre> -->
+                <pre><code data-trim contenteditable class="go">
+func fibonacci() func() int {
+    n, m := 0, 1
+    return func() int {
+        n, m = m, n+m
+        return n
+    }
+}
+
+func main() {
+    fib := fibonacci()
+    for i := 0; i &lt; 10; i++ {
+        fmt.Printf("%d ", fib()) // 1 1 2 3 5 8 13 21 34 55 
     }
 
-    prettyPrint("hello world")
+    fib2 := fibonacci()
+    fmt.Println(fib()) // 1
 }
-                    </code></pre>
-                </section>
+                </code></pre>
             </section>
 
             <section>
-                <section>
-                    <h2>Structs</h2>
-                    <pre><code data-trim contenteditable class="go">
+                <h2>Structs</h2>
+                <pre><code data-trim contenteditable class="go">
 type Point struct {
     X int
     Y int
@@ -254,11 +260,11 @@ func main() {
     p := Point{Y: 2}
     fmt.Println(p)  // {0, 2}
 }
-                    </code></pre>
-                </section>
-                <section>
-                    <h2>Pointers</h2>
-                    <pre><code data-trim contenteditable class="go">
+                </code></pre>
+            </section>
+            <section>
+                <h2>Pointers</h2>
+                <pre><code data-trim contenteditable class="go">
 type Point struct {
     X int
     Y int
@@ -270,8 +276,7 @@ func main() {
     p := new(Point)
     p := &amp;Point{}
 }
-                    </code></pre>
-                </section>
+                </code></pre>
             </section>
 
             <section>
@@ -284,17 +289,38 @@ type error interface {
 
 type AnErrorWithCode int
 
-// Notice it's not a pointer this time
 func (e AnErrorWithCode) Error() string {
     return fmt.Sprintf("Something failed, error code %d", int(e))
 }
                 </code></pre>
             </section>
+            <section>
+                <h2>Errors</h2>
+                <pre><code data-trim contenteditable class="go">
+type LoginFailure struct { 
+    When time.Time
+    User string
+    Description string
+}
+
+// Notice it's a pointer this time
+func (e *LoginFailure) Error() string {
+    return fmt.Sprintf("%s failed to login at %v, %s", 
+        e.User, e.When, e.Description)
+}
+
+func Login(user, password string) (string, error) {
+    if x := rand.Intn(2); x % 2 == 0 {
+        return "It worked!", nil;
+    } 
+    return nil, &amp;LoginFailure{time.Now(), user, "It failed!"}
+}
+                </code></pre>
+            </section>
 
             <section>
-                <section>
-                    <h2>Defer</h2>
-                    <pre><code data-trim contenteditable class="go">
+                <h2>Defer</h2>
+                <pre><code data-trim contenteditable class="go">
 func LoadConfig(filename string) error {
     file, err := os.Open(filename)
     if err != nil {
@@ -304,11 +330,11 @@ func LoadConfig(filename string) error {
 
     // Process file...
 }
-                    </code></pre>
-                </section>
-                <section>
-                    <h2>Error Recovery</h2>
-                    <pre><code data-trim contenteditable class="go">
+                </code></pre>
+            </section>
+            <section>
+                <h2>Error Recovery</h2>
+                <pre><code data-trim contenteditable class="go">
 func main() {
     defer func() {
         if err := recover(); err != nil {
@@ -318,8 +344,7 @@ func main() {
 
     panic("SOMETHING BAD HAPPENED")
 }
-                    </code></pre>
-                </section>
+                </code></pre>
             </section>
 
             <section>
@@ -358,24 +383,6 @@ func jumpInALake(c chan bool) {
                 <small>I don't like you</small>
                 <br />
                 <small>But I don't have my swimsuit</small>
-            </section>
-            <section>
-                <h2>Concurrency</h2>
-                <pre><code data-trim contenteditable class="go">
-func main() {
-    c := make(chan bool)
-    go jumpInALake(c)
-    fmt.Println("I don't like you")
-    &lt;-c
-}
-
-func jumpInALake(c chan bool) {
-    // Need some time to think of a witty response
-    time.Sleep(100 * time.Millisecond)
-    fmt.Println("But I don't have my swimsuit")
-    c &lt;- true
-}
-                    </code></pre>
             </section>
 
             <section>
